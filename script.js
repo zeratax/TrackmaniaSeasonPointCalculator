@@ -113,18 +113,49 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const API_ENDPOINT = 'https://api.trackmania.com'
   const CLIENT_ID = 'f1aca30ec0e5b7454537'
-  const REDIRECT_URI = encodeURIComponent(`${window.location.origin}${window.location.pathname}`)
+  const REDIRECT_URI = `${window.location.origin}${window.location.pathname}`
   const SCOPE = encodeURIComponent('')
 
-  const CODE = urlParams.get('code')
+  const CODE_PARAM = urlParams.get('code')
+  const STATE_PARAM = urlParams.get('state')
+  const EXPIRATION_DATE = window.localStorage.getItem('expirationDate')
 
-  if (!CODE) {
+  if (EXPIRATION_DATE && Date.parse(EXPIRATION_DATE) - Date.now() > 0) {
+    console.debug('auth token not expired!')
+
+    const AUTH_TOKEN = window.localStorage.getItem('accessToken')
+    const TOKEN_TYPE = window.localStorage.getItem('tokenType')
+
+    const mapURI = new URL(`${API_ENDPOINT}/api/user`)
+    fetch(mapURI, {
+      headers: {
+        Authorization: `${TOKEN_TYPE} ${AUTH_TOKEN}`
+      }
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+
+        console.debug(response)
+        return response.json()
+      })
+      .then(response => {
+        console.info(`Welcome ${response.displayName}!`)
+      })
+    return
+  }
+
+  if (!CODE_PARAM) {
     // AUTH STAGE 1
-    console.debug('generating auth link')
+    console.debug('generating auth link...')
 
     const CODE_VERIFIER = generateRandomString(64)
+    const STATE = generateRandomString(64)
     console.debug(`code_verifier: "${CODE_VERIFIER}"`)
+    console.debug(`state: ${STATE}`)
     window.sessionStorage.setItem('code_verifier', CODE_VERIFIER)
+    window.sessionStorage.setItem('state', STATE)
 
     generateCodeChallenge(CODE_VERIFIER)
       .then(CODE_CHALLENGE => {
@@ -137,8 +168,8 @@ document.addEventListener('DOMContentLoaded', function () {
           scope: SCOPE,
           redirect_uri: REDIRECT_URI,
           code_challenge: CODE_CHALLENGE,
-          code_challenge_method: 'S256'
-          // state: CODE_CHALLENGE
+          code_challenge_method: 'S256',
+          state: STATE
         })
         API_OAUTH_URL.search = params
 
@@ -146,21 +177,38 @@ document.addEventListener('DOMContentLoaded', function () {
         loginButton.style.display = 'initial'
         loginButton.href = API_OAUTH_URL
       })
+    console.debug('auth link generated!')
   } else {
     // AUTH STAGE 2
-    console.debug('fetching auth token')
+    const CODE_VERIFIER = window.sessionStorage.getItem('code_verifier')
+    const STATE = window.sessionStorage.getItem('state')
+    console.debug(`code_verifier: ${CODE_VERIFIER}`)
+    console.debug(`state: ${STATE}`)
+
+    console.debug(`comparing saved state "${STATE} with returned state "${STATE_PARAM}"...`)
+    if (STATE !== STATE_PARAM) {
+      throw new Error('State does not match!!')
+    }
+    console.debug('state matched!')
+
+    console.debug('fetching auth token...')
     const API_OAUTH_URL = new URL(`${API_ENDPOINT}/api/access_token`)
     const params = new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: CLIENT_ID,
       redirect_uri: REDIRECT_URI,
       code_verifier: window.sessionStorage.getItem('code_verifier'),
-      code: CODE
+      code: CODE_PARAM
     })
 
-    API_OAUTH_URL.search = params
-
-    fetch(API_OAUTH_URL, { method: 'POST' })
+    fetch(API_OAUTH_URL, {
+      method: 'POST',
+      body: params,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Accept: 'application/json'
+      }
+    })
       .then(response => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`)
@@ -175,9 +223,14 @@ document.addEventListener('DOMContentLoaded', function () {
         const accessToken = response.access_token ?? ''
         const expiresIn = response.expires_in ?? 0
 
-        window.sessionStorage.setItem('tokenType', tokenType)
-        window.sessionStorage.setItem('accessToken', accessToken)
-        window.sessionStorage.setItem('expiresIn', expiresIn)
+        const expirationDate = new Date()
+        expirationDate.setSeconds(expirationDate.getSeconds() + expiresIn)
+
+        window.localStorage.setItem('tokenType', tokenType)
+        window.localStorage.setItem('accessToken', accessToken)
+        window.localStorage.setItem('expirationDate', expirationDate)
+
+        window.history.pushState({}, document.title, window.location.pathname)
       })
   }
 })
