@@ -28,6 +28,7 @@ function calculatePoint (p) {
   }
   return 0
 }
+
 function calculateAll () {
   let total = 0
   let saveRanks = ''
@@ -201,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
       code: CODE_PARAM
     })
 
+    // AUTH STAGE 3
     fetch(API_OAUTH_URL, {
       method: 'POST',
       body: params,

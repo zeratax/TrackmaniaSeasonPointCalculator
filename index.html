@@ -178,8 +178,12 @@ Ez 20031 pont.
 		<h3 id="result">0</h3>
 		<br>
 		<h4>Generated link</h4>
-		<div><input type="text" id="link"></input><br><button type="button" class="btn btn-secondary"
-				onclick="copy(document.getElementById('link'))">Copy link</button></div>
+		<div>
+			<input type="text" id="link" disabled>
+			<br>
+			<button type="button" class="btn btn-secondary" onclick="copy(document.getElementById('link'))">Copy
+				link</button>
+		</div>
 		<div id="copyResult"></div>
 		<br>
 		<h5>Calculation info</h5>
@@ -188,133 +192,102 @@ Ez 20031 pont.
 			<br>
 			<math xmlns="http://www.w3.org/1998/Math/MathML">
 				<mstyle displaystyle="true">
-				  <mrow class="MJX-TeXAtom-ORD">
-					<mi>p</mi>
-					<mi>o</mi>
-					<mi>i</mi>
-					<mi>n</mi>
-					<mi>t</mi>
-					<mi>s</mi>
-					<mo>=</mo>
 					<mrow>
-					  <mo>{</mo>
-					  <mtable columnalign="left left" rowspacing="4pt" columnspacing="1em">
-						<mtr>
-						  <mtd>
-							<mfrac>
-							  <mn>40.000</mn>
-							  <mrow>
-								<mi>r</mi>
-								<mi>a</mi>
-								<mi>n</mi>
-								<mi>k</mi>
-							  </mrow>
-							</mfrac>
-						  </mtd>
-						  <mtd>
-							<mtext>if&#xA0;</mtext>
-							<mi>r</mi>
-							<mi>a</mi>
-							<mi>n</mi>
-							<mi>k</mi>
-							<mo>&#x2264;<!-- ≤ --></mo>
-							<mn>10</mn>
-						  </mtd>
-						</mtr>
-						<mtr>
-						  <mtd>
-							<mfrac>
-							  <mn>4.000</mn>
-							  <msup>
-								<mn>2</mn>
-								<mrow class="MJX-TeXAtom-ORD">
-								  <mi>c</mi>
-								  <mi>e</mi>
-								  <mi>i</mi>
-								  <mi>l</mi>
-								  <mi>i</mi>
-								  <mi>n</mi>
-								  <mi>g</mi>
-								  <mo stretchy="false">(</mo>
-								  <mi>l</mi>
-								  <mi>o</mi>
-								  <msub>
-									<mi>g</mi>
-									<mrow class="MJX-TeXAtom-ORD">
-									  <mn>10</mn>
-									</mrow>
-								  </msub>
-								  <mo stretchy="false">(</mo>
-								  <mi>r</mi>
-								  <mi>a</mi>
-								  <mi>n</mi>
-								  <mi>k</mi>
-								  <mo stretchy="false">)</mo>
-								  <mo stretchy="false">)</mo>
-								  <mo>&#x2212;<!-- − --></mo>
-								  <mn>1</mn>
-								</mrow>
-							  </msup>
-							</mfrac>
-							<mo>&#x2217;<!-- ∗ --></mo>
-							<mo stretchy="false">(</mo>
-							<mfrac>
-							  <msup>
-								<mn>10</mn>
-								<mrow class="MJX-TeXAtom-ORD">
-								  <mi>c</mi>
-								  <mi>e</mi>
-								  <mi>i</mi>
-								  <mi>l</mi>
-								  <mi>i</mi>
-								  <mi>n</mi>
-								  <mi>g</mi>
-								  <mo stretchy="false">(</mo>
-								  <mi>l</mi>
-								  <mi>o</mi>
-								  <msub>
-									<mi>g</mi>
-									<mrow class="MJX-TeXAtom-ORD">
-									  <mn>10</mn>
-									</mrow>
-								  </msub>
-								  <mo stretchy="false">(</mo>
-								  <mi>r</mi>
-								  <mi>a</mi>
-								  <mi>n</mi>
-								  <mi>k</mi>
-								  <mo stretchy="false">)</mo>
-								  <mo stretchy="false">)</mo>
-								  <mo>&#x2212;<!-- − --></mo>
-								  <mn>1</mn>
-								</mrow>
-							  </msup>
-							  <mrow>
-								<mi>r</mi>
-								<mi>a</mi>
-								<mi>n</mi>
-								<mi>k</mi>
-							  </mrow>
-							</mfrac>
-							<mo>+</mo>
-							<mn>0.9</mn>
-							<mo stretchy="false">)</mo>
-						  </mtd>
-						  <mtd>
-							<mtext>if&#xA0;</mtext>
-							<mi>r</mi>
-							<mi>a</mi>
-							<mi>n</mi>
-							<mi>k</mi>
-							<mo>&gt;</mo>
-							<mn>10</mn>
-						  </mtd>
-						</mtr>
-					  </mtable>
+						<mi>points</mi>
+						<mo>=</mo>
+						<mrow>
+							<mo>{</mo>
+							<mtable columnalign="left left" rowspacing="4pt" columnspacing="1em">
+								<mtr>
+									<mtd>
+										<mfrac>
+											<mn>40.000</mn>
+											<mrow>
+												<mi>rank</mi>
+											</mrow>
+										</mfrac>
+									</mtd>
+									<mtd>
+										<mtext>if&#xA0;</mtext>
+										<mi>rank</mi>
+										<mo>&#x2264;
+											<!-- ≤ -->
+										</mo>
+										<mn>10</mn>
+									</mtd>
+								</mtr>
+								<mtr>
+									<mtd>
+										<mfrac>
+											<mn>4.000</mn>
+											<msup>
+												<mn>2</mn>
+												<mrow>
+													<mi>ceiling</mi>
+													<mo stretchy="false">(</mo>
+													<msub>
+														<mi>log</mi>
+														<mrow>
+															<mn>10</mn>
+														</mrow>
+													</msub>
+													<mo stretchy="false">(</mo>
+													<mi>rank</mi>
+													<mo stretchy="false">)</mo>
+													<mo stretchy="false">)</mo>
+													<mo>&#x2212;
+														<!-- − -->
+													</mo>
+													<mn>1</mn>
+												</mrow>
+											</msup>
+										</mfrac>
+										<mo>&#x2217;
+											<!-- ∗ -->
+										</mo>
+										<mo stretchy="false">(</mo>
+										<mfrac>
+											<msup>
+												<mn>10</mn>
+												<mrow>
+													<mi>ceiling</mi>
+													<mo stretchy="false">(</mo>
+													<msub>
+														<mi>log</mi>
+														<mrow>
+															<mn>10</mn>
+														</mrow>
+													</msub>
+													<mo stretchy="false">(</mo>
+													<mi>rank</mi>
+													<mo stretchy="false">)</mo>
+													<mo stretchy="false">)</mo>
+													<mo>&#x2212;
+														<!-- − -->
+													</mo>
+													<mn>1</mn>
+												</mrow>
+											</msup>
+											<mrow>
+												<mi>rank</mi>
+											</mrow>
+										</mfrac>
+										<mo>+</mo>
+										<mn>0.9</mn>
+										<mo stretchy="false">)</mo>
+									</mtd>
+									<mtd>
+										<mtext>if&#xA0;</mtext>
+										<mi>rank</mi>
+										<mo>&gt;</mo>
+										<mn>10</mn>
+									</mtd>
+								</mtr>
+							</mtable>
+						</mrow>
 					</mrow>
-				  </mrow>
 				</mstyle>
-			  </math>
+			</math>
 		</p>
 		<button type="button" class="btn btn-danger" onclick="reset()">Reset calculator</button>
 		<a href="" type="button" class="btn btn-info" id="login-button" style="display:none">Login!</a>
